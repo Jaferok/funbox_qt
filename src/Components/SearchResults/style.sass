@@ -1,0 +1,28 @@
+.search-results
+	display: flex
+	justify-content: center
+	position: absolute
+	left: auto
+	top: 54px
+	z-index: 1
+	box-sizing: border-box
+	background-color: rgb(44, 49, 57)
+	border-radius: 5px
+	color: white
+	width: 100%
+	&_loading
+		padding: 20px
+	&__list
+		width: 100%
+		&-item
+			padding: 30px
+			border-bottom: 1px solid white
+			cursor: pointer
+			&-title
+				font-size: 20px
+			&_odd
+				background-color: rgb(49, 55, 63)
+			&:last-child
+				border-bottom: none
+			&_active
+				background-color: rgb(55, 60, 67)
