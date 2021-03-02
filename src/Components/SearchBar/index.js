@@ -3,7 +3,7 @@ import { debounce } from "lodash";
 import axios from "axios";
 import classnames from "classnames";
 import useDetectOutsideClick from "./useDetectOutsideClick";
-import { API_KEY } from "App";
+import { makeGeoUrl } from "../utils";
 
 import styles from "./style.sass";
 import SearchResults from "Components/SearchResults";
@@ -22,13 +22,12 @@ const SearchBar = ({ setRoutesList, routesList }) => {
   const [error, setError] = useState("");
 
   const handleItemClick = (item) => {
-    setRoutesList(routesList.concat([item]));
-    setKeyword("");
-    if (showResults) setShowResults(false);
+    if (!routesList.includes(item)) {
+      setRoutesList(routesList.concat([item]));
+      setKeyword("");
+      if (showResults) setShowResults(false);
+    }
   };
-
-  const makeGeoUrl = (geocode) =>
-    `https://geocode-maps.yandex.ru/1.x/?apikey=${API_KEY}&format=json&geocode=${geocode}`;
 
   const searchFunction = (value) => {
     if (value.length < 3) {
@@ -36,7 +35,7 @@ const SearchBar = ({ setRoutesList, routesList }) => {
       setResults([]);
       return setError("Для поиска введите 3 и более символов");
     }
-    axios.get(makeGeoUrl(value)).then((res) => {
+    axios.get(makeGeoUrl(value, false)).then((res) => {
       const data = [...res.data.response.GeoObjectCollection.featureMember];
       if (data.length > 0) {
         const formattedData = data.reduce((acc, curVal, index) => {
@@ -60,11 +59,13 @@ const SearchBar = ({ setRoutesList, routesList }) => {
   };
 
   const handleChange = (event) => {
+    const value = event.target.value;
     reset();
-    setKeyword(event.target.value);
+    setKeyword(value);
+    if (!value.length) return;
     setLoading(true);
     if (!showResults) setShowResults(true);
-    handler(event.target.value);
+    handler(value);
   };
 
   const handleClick = () => {

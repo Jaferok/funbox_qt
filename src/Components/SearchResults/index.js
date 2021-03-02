@@ -25,11 +25,13 @@ const SearchResults = ({ items, loading, error, handleItemClick }) => {
       }
     }
   }, [downPress]);
+
   useEffect(() => {
     if (items.length && upPress) {
       setCursor((prevState) => (prevState > 0 ? prevState - 1 : prevState));
     }
   }, [upPress]);
+
   useEffect(() => {
     if (items.length && enterPress) {
       let index;
@@ -37,6 +39,7 @@ const SearchResults = ({ items, loading, error, handleItemClick }) => {
       handleItemClick(items[index]);
     }
   }, [cursor, enterPress]);
+
   useEffect(() => {
     if (items.length && hovered) {
       setCursor(items.indexOf(hovered));
@@ -50,6 +53,8 @@ const SearchResults = ({ items, loading, error, handleItemClick }) => {
 
   return (
     <div
+      role="menu"
+      aria-labelledby="search-results"
       className={cx("search-results", {
         "search-results_loading": loading,
       })}
@@ -68,6 +73,7 @@ const SearchResults = ({ items, loading, error, handleItemClick }) => {
               onClick={() => handleItemClick(result)}
               onMouseEnter={() => setHovered(result)}
               onMouseLeave={handleMouseLeave}
+              role="menuitem"
             >
               <p className={cx("search-results__list-item-title")}>
                 {result.name}
